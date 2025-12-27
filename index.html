@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Landing autónoma — Contacto</title>
+<style>
+  :root{--accent:#0b6efd;--bg:#f7f8fb;--card:#ffffff;--muted:#6b7280}
+  body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:#111}
+  .container{max-width:980px;margin:28px auto;padding:20px}
+  header{height:260px;border-radius:10px;background:linear-gradient(135deg,#0b6efd33,#7dd3fc33);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#001f3f}
+  header .banner-text{z-index:2;text-align:center;color:#03396b;display:none}
+  header h1{margin:0;font-size:28px}
+  header p{margin:6px 0 0;color:var(--muted)}
+  .banner-controls{position:absolute;right:8px;bottom:8px;z-index:3;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+  .banner-controls label{background:#fff;padding:4px 8px;border-radius:4px;display:inline-block;cursor:pointer;border:1px solid #e6e9ef;font-size:11px;opacity:0.7;transition:opacity 0.2s}
+  .banner-controls label:hover{opacity:1}
+  .banner-controls select{opacity:0.7;transition:opacity 0.2s}
+  .banner-controls select:hover{opacity:1}
+  .banner-preview{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat;opacity:1;background-image:url('banner.jpeg')}
+  .card{background:var(--card);border-radius:10px;padding:18px;margin-top:18px;box-shadow:0 6px 18px rgba(12,20,40,0.06)}
+  .chat{display:flex;gap:18px}
+  .chat .left{flex:1}
+  .chat .right{width:360px}
+  .bot-window{height:420px;border-radius:8px;border:1px solid #e6e9ef;padding:12px;overflow:auto;background:#fbfdff}
+  .message{margin:8px 0;display:flex}
+  .msg.bot{justify-content:flex-start}
+  .msg.user{justify-content:flex-end}
+  .bubble{max-width:78%;padding:10px 12px;border-radius:12px;background:#eef6ff;color:#022c43}
+  .bubble.user{background:var(--accent);color:#fff}
+  .controls{display:flex;gap:8px;margin-top:10px}
+  input[type="text"],input[type="email"],input[type="tel"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
+  .small-row{display:flex;gap:8px}
+  .small-row input{flex:1}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .option-btn{padding:8px;border-radius:8px;border:1px solid #e6e9ef;background:#fff;color:#111;cursor:pointer}
+  .option-btn.active{border-color:var(--accent);background:#f0f7ff;box-shadow:0 4px 12px rgba(11,110,253,0.12)}
+  .footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button{background:var(--accent);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent);border:1px solid #e6e9ef}
+  .muted{color:var(--muted);font-size:13px}
+  .consent{font-size:13px;margin-top:8px}
+  .links-row{display:flex;gap:8px;margin-top:8px}
+  .links-row input{flex:1}
+  pre{background:#0b1220;color:#e6f0ff;padding:12px;border-radius:8px;overflow:auto}
+  .editable{background:#fffaeb;padding:2px 6px;border-radius:4px;cursor:text;border:1px dashed #fbbf24}
+  .editable:hover{background:#fef3c7}
+  .editable:focus{outline:2px solid var(--accent);background:#fff}
+  @media(max-width:880px){.chat{flex-direction:column}.chat .right{width:100%}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header id="banner">
+    <div class="banner-preview" id="bannerPreview"></div>
+    <div class="banner-text">
+      <h1>¿En qué puedo ayudarte?</h1>
+      <p>Completa el chat y cuéntanos tu proyecto</p>
+    </div>
+    <div class="banner-controls">
+      <label>
+        📷
+        <input id="bannerInput" type="file" accept="image/*" style="display:none" />
+      </label>
+      <select id="langSelector" style="padding:4px 6px;border-radius:4px;border:1px solid #e6e9ef;background:#fff;cursor:pointer;font-size:16px;margin-top:6px">
+        <option value="es">🇪🇸</option>
+        <option value="en">🇬🇧</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="card chat" aria-live="polite">
+    <div class="left">
+      <div class="bot-window" id="chatWindow" role="log" aria-atomic="false"></div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." />
+        <button id="sendBtn">Enviar</button>
+        <button id="resetBtn" class="ghost" title="Reiniciar chat">🔄</button>
+      </div>
+      <div class="muted" style="margin-top:8px">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
+    </div>
+
+    <div class="right">
+      <div class="card" style="padding:12px">
+        <h3>Resumen rápido</h3>
+        <div id="summary" class="muted">Aún no hay datos.</div>
+
+        <div style="margin-top:12px">
+          <label class="muted">LinkedIn personal y empresa</label>
+          <div class="links-row">
+            <input id="linkedinPersonal" type="text" placeholder="LinkedIn personal (opcional)" />
+            <input id="linkedinEmpresa" type="text" placeholder="LinkedIn empresa (opcional)" />
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label class="muted">¿Dado de alta en la newsletter? <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">Suscríbete aquí</a></label>
+          <div style="margin-top:6px">
+            <label><input id="newsletter" type="checkbox" /> Sí, estoy suscrito</label>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label class="muted">Consentimiento (obligatorio)</label>
+          <div class="consent">
+            <label><input id="gdpr" type="checkbox" /> Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.</label>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button id="btnCopy" class="ghost" style="display:none">Copiar JSON</button>
+          <button id="btnDownload" class="ghost" style="display:none">Descargar JSON</button>
+          <button id="btnMail" class="ghost">Enviar por correo</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px" class="muted">Campos recogidos por el bot: nombre, correo, teléfono, empresa, tamaño del equipo, target, tipo de ayuda, compromiso.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px" class="muted">Puedes personalizar textos, colores y el comportamiento del botón de envío en el código.</div>
+</div>
+
+<script>
+/* --- Sistema de idiomas --- */
+let currentLang = 'es';
+
+const translations = {
+  es: {
+    welcome: 'Hola 👋 Soy el asistente de Victor. ¿Cómo te llamas?',
+    nombre: 'Tu nombre',
+    apellido: 'Tu apellido',
+    email: 'Tu correo electrónico',
+    telefono: 'Teléfono',
+    empresa: 'Nombre de la empresa (opcional)',
+    equipo: '¿Cuántas personas hay en tu equipo?',
+    target: 'Describe tu target (ej: pymes, consumidores 25-40, B2B)',
+    targetGeografico: 'Target geográfico principal (ej: Barcelona, España, Europa)',
+    ayudaQuestion: '¿Qué tipo de ayuda necesitas? (puedes elegir varias)',
+    ayudaOptions: [
+      'Colaboración con el target',
+      'Venta de servicios',
+      'Levantar capital',
+      'Búsqueda de distribuidores',
+      'Asesoría comercial',
+      'Valor del producto/servicio (pago: año/mes/única vez)',
+      'Target geográfico',
+      'Donaciones para ONGs'
+    ],
+    compromisoQuestion: '¿Qué tan comprometido estás con el proyecto?',
+    compromisoOptions: ['Explorando idea','En desarrollo','Listo para lanzar','Buscando inversión','Buscando clientes'],
+    resumenAyudaText: 'Cuéntanos brevemente qué tipo de ayuda necesitas (opcional)',
+    resumenAyudaQuestion: '¿Quieres añadir más detalles sobre qué necesitas específicamente? (Opcional)',
+    confirm: 'Perfecto. Antes de finalizar, por favor completa las casillas de LinkedIn si quieres y acepta el consentimiento GDPR en la columna derecha.',
+    end: 'Cuando aceptes el consentimiento, pulsa "Enviar por correo" o descarga los datos.',
+    selectOptions: 'Selecciona las opciones y luego pulsa Enviar.',
+    useButtons: 'Usa los botones que aparecen en el chat para esta pregunta.',
+    requiredField: 'Este campo es obligatorio.',
+    validEmail: 'Introduce un correo válido.',
+    selectAtLeastOne: 'Por favor selecciona al menos una opción.',
+    summary: 'Resumen rápido',
+    noData: 'Aún no hay datos.',
+    linkedinLabel: 'LinkedIn personal y empresa',
+    linkedinPersonalPh: 'LinkedIn personal (opcional)',
+    linkedinEmpresaPh: 'LinkedIn empresa (opcional)',
+    newsletterLabel: '¿Dado de alta en la newsletter?',
+    newsletterLink: 'Suscríbete aquí',
+    newsletterCheck: 'Sí, estoy suscrito',
+    gdprLabel: 'Consentimiento (obligatorio)',
+    gdprText: 'Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.',
+    btnMail: 'Enviar por correo',
+    sendPlaceholder: 'Escribe tu respuesta aquí...',
+    sendBtn: 'Enviar',
+    resetBtn: '🔄',
+    botHelper: 'El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄',
+    gdprRequired: 'Debes aceptar el consentimiento GDPR antes de copiar/enviar.',
+    sentConfirm: '✓ Información enviada a Victor. La página se reiniciará.',
+    resetConfirm: '¿Seguro que quieres reiniciar el chat? Se perderán todos los datos.',
+    selectedPrefix: 'Seleccionaste:',
+    pleaseEnter: 'Por favor ingresa'
+  },
+  en: {
+    welcome: 'Hello 👋 I\'m Victor\'s assistant. What\'s your name?',
+    nombre: 'Your name',
+    apellido: 'Your surname',
+    email: 'Your email address',
+    telefono: 'Phone number',
+    empresa: 'Company name (optional)',
+    equipo: 'How many people are on your team?',
+    target: 'Describe your target (e.g., SMEs, consumers 25-40, B2B)',
+    targetGeografico: 'Main geographic target (e.g., Barcelona, Spain, Europe)',
+    ayudaQuestion: 'What type of help do you need? (you can choose several)',
+    ayudaOptions: [
+      'Target collaboration',
+      'Service sales',
+      'Raise capital',
+      'Distributor search',
+      'Commercial advisory',
+      'Product/service value (payment: yearly/monthly/one-time)',
+      'Geographic target',
+      'NGO donations'
+    ],
+    compromisoQuestion: 'How committed are you to the project?',
+    compromisoOptions: ['Exploring idea','In development','Ready to launch','Seeking investment','Seeking clients'],
+    resumenAyudaText: 'Tell us briefly what kind of help you need (optional)',
+    resumenAyudaQuestion: 'Do you want to add more details about what you specifically need? (Optional)',
+    confirm: 'Perfect. Before finishing, please complete the LinkedIn fields if you wish and accept the GDPR consent in the right column.',
+    end: 'When you accept the consent, click "Send by email" or download the data.',
+    selectOptions: 'Select the options and then press Send.',
+    useButtons: 'Use the buttons that appear in the chat for this question.',
+    requiredField: 'This field is required.',
+    validEmail: 'Please enter a valid email.',
+    selectAtLeastOne: 'Please select at least one option.',
+    summary: 'Quick summary',
+    noData: 'No data yet.',
+    linkedinLabel: 'Personal and company LinkedIn',
+    linkedinPersonalPh: 'Personal LinkedIn (optional)',
+    linkedinEmpresaPh: 'Company LinkedIn (optional)',
+    newsletterLabel: 'Subscribed to newsletter?',
+    newsletterLink: 'Subscribe here',
+    newsletterCheck: 'Yes, I\'m subscribed',
+    gdprLabel: 'Consent (required)',
+    gdprText: 'I accept that my data will be processed by the entity responsible for this landing page in accordance with Regulation (EU) 2016/679 and applicable legislation. I understand that I can exercise my rights of access, rectification, deletion and opposition.',
+    btnMail: 'Send by email',
+    sendPlaceholder: 'Type your answer here...',
+    sendBtn: 'Send',
+    resetBtn: '🔄',
+    botHelper: 'The bot will guide you step by step. You can edit the data directly in the summary or restart with 🔄',
+    gdprRequired: 'You must accept GDPR consent before copying/sending.',
+    sentConfirm: '✓ Information sent to Victor. The page will restart.',
+    resetConfirm: 'Are you sure you want to restart the chat? All data will be lost.',
+    selectedPrefix: 'You selected:',
+    pleaseEnter: 'Please enter'
+  }
+};
+
+/* --- Datos y flujo del bot --- */
+const state = {
+  nombre: '', apellido: '', email: '', telefono: '', empresa: '', equipo: '', target: '', targetGeografico: '',
+  ayuda: [], compromiso: '', resumenAyuda: '', newsletter: false, linkedinPersonal:'', linkedinEmpresa:'', gdpr:false
+};
+
+function getSteps() {
+  const t = translations[currentLang];
+  return [
+    {id:'welcome', type:'bot', text: t.welcome},
+    {id:'nombre', type:'input', key:'nombre', placeholder: t.nombre},
+    {id:'apellido', type:'input', key:'apellido', placeholder: t.apellido},
+    {id:'email', type:'input', key:'email', placeholder: t.email, validate:'email'},
+    {id:'telefono', type:'input', key:'telefono', placeholder: t.telefono},
+    {id:'empresa', type:'input', key:'empresa', placeholder: t.empresa},
+    {id:'equipo', type:'input', key:'equipo', placeholder: t.equipo},
+    {id:'target', type:'input', key:'target', placeholder: t.target},
+    {id:'targetGeografico', type:'input', key:'targetGeografico', placeholder: t.targetGeografico},
+    {id:'ayuda', type:'options', key:'ayuda', text: t.ayudaQuestion, options: t.ayudaOptions},
+    {id:'compromiso', type:'select', key:'compromiso', text: t.compromisoQuestion, options: t.compromisoOptions},
+    {id:'resumenAyuda', type:'input', key:'resumenAyuda', placeholder: t.resumenAyudaText, text: t.resumenAyudaQuestion},
+    {id:'confirm', type:'bot', text: t.confirm},
+    {id:'end', type:'bot', text: t.end}
+  ];
+}
+
+let steps = getSteps();
+
+let stepIndex = 0;
+const chatWindow = document.getElementById('chatWindow');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+const summaryEl = document.getElementById('summary');
+const linkedinPersonal = document.getElementById('linkedinPersonal');
+const linkedinEmpresa = document.getElementById('linkedinEmpresa');
+
+function appendBot(text){
+  const div = document.createElement('div'); div.className='message msg bot';
+  const b = document.createElement('div'); b.className='bubble'; b.innerHTML = text;
+  div.appendChild(b); chatWindow.appendChild(div); chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+function appendUser(text){
+  const div = document.createElement('div'); div.className='message msg user';
+  const b = document.createElement('div'); b.className='bubble user'; b.innerText = text;
+  div.appendChild(b); chatWindow.appendChild(div); chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function renderStep(){
+  const s = steps[stepIndex];
+  if(!s) return;
+  if(s.type === 'bot'){
+    appendBot(s.text);
+    stepIndex++;
+    setTimeout(renderStep,600);
+    return;
+  }
+  if(s.type === 'input'){
+    let displayText = s.text;
+    const t = translations[currentLang];
+    // Personalizar mensaje de resumen según opciones de ayuda seleccionadas
+    if(s.key === 'resumenAyuda' && state.ayuda && state.ayuda.length > 0){
+      displayText = `${t.selectedPrefix} ${state.ayuda.join(', ')}. ${t.resumenAyudaQuestion}`;
+    }
+    appendBot(displayText || (t.pleaseEnter + ' ' + s.placeholder));
+    userInput.placeholder = s.placeholder || '';
+    userInput.focus();
+  } else if(s.type === 'options'){
+    appendBot(s.text);
+    // render option buttons inside chat
+    const container = document.createElement('div'); container.className='options'; container.style.margin='8px 0';
+    s.options.forEach(opt=>{
+      const btn = document.createElement('button'); btn.className='option-btn'; btn.innerText=opt;
+      btn.onclick = ()=> {
+        // toggle selection
+        if(!state[s.key]) state[s.key]=[];
+        const arr = state[s.key];
+        const idx = arr.indexOf(opt);
+        if(idx===-1){ arr.push(opt); btn.classList.add('active'); }
+        else { arr.splice(idx,1); btn.classList.remove('active'); }
+        updateSummary();
+      };
+      container.appendChild(btn);
+    });
+    chatWindow.appendChild(container); chatWindow.scrollTop = chatWindow.scrollHeight;
+    // show instruction to press enviar cuando termine
+    const t = translations[currentLang];
+    appendBot(t.selectOptions);
+  } else if(s.type === 'select'){
+    appendBot(s.text);
+    const container = document.createElement('div'); container.style.margin='8px 0';
+    s.options.forEach(opt=>{
+      const btn = document.createElement('button'); btn.className='option-btn'; btn.innerText=opt;
+      btn.onclick = ()=> {
+        state[s.key]=opt;
+        appendUser(opt);
+        updateSummary();
+        stepIndex++;
+        setTimeout(renderStep,400);
+      };
+      container.appendChild(btn);
+    });
+    chatWindow.appendChild(container); chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+}
+
+sendBtn.addEventListener('click', handleSend);
+userInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') handleSend(); });
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  const t = translations[currentLang];
+  if(confirm(t.resetConfirm)){
+    location.reload();
+  }
+});
+
+function handleSend(){
+  const s = steps[stepIndex];
+  const text = userInput.value.trim();
+  const t = translations[currentLang];
+  if(!s) return;
+  if(s.type === 'input'){
+    const requiredInputs = ['nombre','apellido','email','telefono'];
+    if(requiredInputs.includes(s.key) && !text){
+      alert(t.requiredField);
+      return;
+    }
+    if(s.validate === 'email' && !/^\S+@\S+\.\S+$/.test(text)){
+      alert(t.validEmail);
+      return;
+    }
+    appendUser(text || '(sin respuesta)');
+    state[s.key]=text;
+    userInput.value=''; stepIndex++; updateSummary();
+    setTimeout(renderStep,400);
+  } else if(s.type === 'options'){
+    // for multiple options, check if at least one is selected
+    if(!state[s.key] || state[s.key].length === 0){
+      alert(t.selectAtLeastOne);
+      return;
+    }
+    appendUser(state[s.key].join(', '));
+    stepIndex++;
+    setTimeout(renderStep,400);
+  } else {
+    // for select type, instruct to use buttons
+    alert(t.useButtons);
+  }
+}
+
+function updateSummary(){
+  const parts = [];
+  if(state.nombre) parts.push('<strong>Nombre:</strong> <span contenteditable="true" class="editable" data-key="nombre">'+escapeHtml(state.nombre)+'</span>');
+  if(state.apellido) parts.push('<strong>Apellido:</strong> <span contenteditable="true" class="editable" data-key="apellido">'+escapeHtml(state.apellido)+'</span>');
+  if(state.email) parts.push('<strong>Email:</strong> <span contenteditable="true" class="editable" data-key="email">'+escapeHtml(state.email)+'</span>');
+  if(state.telefono) parts.push('<strong>Tel:</strong> <span contenteditable="true" class="editable" data-key="telefono">'+escapeHtml(state.telefono)+'</span>');
+  if(state.empresa) parts.push('<strong>Empresa:</strong> <span contenteditable="true" class="editable" data-key="empresa">'+escapeHtml(state.empresa)+'</span>');
+  if(state.equipo) parts.push('<strong>Equipo:</strong> <span contenteditable="true" class="editable" data-key="equipo">'+escapeHtml(state.equipo)+'</span>');
+  if(state.target) parts.push('<strong>Target:</strong> <span contenteditable="true" class="editable" data-key="target">'+escapeHtml(state.target)+'</span>');
+  if(state.targetGeografico) parts.push('<strong>Target Geográfico:</strong> <span contenteditable="true" class="editable" data-key="targetGeografico">'+escapeHtml(state.targetGeografico)+'</span>');
+  if(state.ayuda && state.ayuda.length) parts.push('<strong>Ayuda:</strong> '+escapeHtml(state.ayuda.join('; ')));
+  if(state.compromiso) parts.push('<strong>Compromiso:</strong> '+escapeHtml(state.compromiso));
+  if(state.resumenAyuda) parts.push('<strong>Resumen:</strong> <span contenteditable="true" class="editable" data-key="resumenAyuda">'+escapeHtml(state.resumenAyuda)+'</span>');
+  summaryEl.innerHTML = parts.length ? parts.join('<br/>') : 'Aún no hay datos.';
+
+  // Attach listeners to editable fields
+  document.querySelectorAll('.editable').forEach(el=>{
+    el.addEventListener('blur', function(){
+      const key = this.dataset.key;
+      state[key] = this.innerText.trim();
+    });
+  });
+}
+
+/* banner upload preview */
+const bannerInput = document.getElementById('bannerInput');
+const bannerPreview = document.getElementById('bannerPreview');
+bannerInput.addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const url = URL.createObjectURL(f);
+  bannerPreview.style.backgroundImage = `url(${url})`;
+});
+
+/* copy / download / mail */
+document.getElementById('btnCopy').addEventListener('click', ()=>{
+  collectExtras();
+  const gdpr = document.getElementById('gdpr');
+  if(!gdpr.checked){ alert('Debes aceptar el consentimiento GDPR antes de copiar/enviar.'); return; }
+  const json = JSON.stringify(state, null, 2);
+  navigator.clipboard.writeText(json).then(()=>alert('JSON copiado al portapapeles.'));
+});
+document.getElementById('btnDownload').addEventListener('click', ()=>{
+  collectExtras();
+  const gdpr = document.getElementById('gdpr');
+  if(!gdpr.checked){ alert('Debes aceptar el consentimiento GDPR antes de copiar/enviar.'); return; }
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'datos-landing.json'; a.click();
+});
+document.getElementById('btnMail').addEventListener('click', ()=>{
+  collectExtras();
+  const t = translations[currentLang];
+  const gdpr = document.getElementById('gdpr');
+  if(!gdpr.checked){ alert(t.gdprRequired); return; }
+  const subject = encodeURIComponent('URGENTE - Contacto desde landing: ' + (state.nombre || 'sin nombre'));
+  const body = encodeURIComponent(JSON.stringify(state, null, 2));
+  // abre cliente de correo con body (nota: puede truncarse en algunos clientes)
+  window.location.href = `mailto:vhorcasitas@amersoc.com?subject=${subject}&body=${body}`;
+  // mostrar confirmación y reiniciar
+  alert(t.sentConfirm);
+  setTimeout(()=>{ location.reload(); }, 500);
+});
+
+function collectExtras(){
+  state.linkedinPersonal = linkedinPersonal.value.trim();
+  state.linkedinEmpresa = linkedinEmpresa.value.trim();
+  state.newsletter = document.getElementById('newsletter').checked;
+  state.gdpr = document.getElementById('gdpr').checked;
+}
+
+/* helper */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+/* Language selector */
+document.getElementById('langSelector').addEventListener('change', (e)=>{
+  currentLang = e.target.value;
+  steps = getSteps();
+  updateUILanguage();
+  // restart chat with new language
+  chatWindow.innerHTML = '';
+  stepIndex = 0;
+  renderStep();
+});
+
+function updateUILanguage(){
+  const t = translations[currentLang];
+  document.getElementById('userInput').placeholder = t.sendPlaceholder;
+  document.getElementById('sendBtn').innerText = t.sendBtn;
+  document.querySelector('h3').innerText = t.summary;
+  document.querySelectorAll('.muted')[0].innerText = t.linkedinLabel;
+  document.getElementById('linkedinPersonal').placeholder = t.linkedinPersonalPh;
+  document.getElementById('linkedinEmpresa').placeholder = t.linkedinEmpresaPh;
+  document.querySelectorAll('.muted')[1].innerHTML = `${t.newsletterLabel} <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">${t.newsletterLink}</a>`;
+  // Update GDPR label text preserving the checkbox
+  const gdprCheckbox = document.getElementById('gdpr');
+  const gdprChecked = gdprCheckbox ? gdprCheckbox.checked : false;
+  document.querySelector('.consent label').innerHTML = `<input id="gdpr" type="checkbox" ${gdprChecked ? 'checked' : ''} /> ${t.gdprText}`;
+  document.getElementById('btnMail').innerText = t.btnMail;
+  document.querySelectorAll('.muted')[3].innerText = t.botHelper;
+  // Update newsletter checkbox label
+  const newsletterCheckbox = document.getElementById('newsletter');
+  const newsletterChecked = newsletterCheckbox ? newsletterCheckbox.checked : false;
+  newsletterCheckbox.parentElement.innerHTML = `<input id="newsletter" type="checkbox" ${newsletterChecked ? 'checked' : ''} /> ${t.newsletterCheck}`;
+  updateSummary();
+}
+
+/* inicializa */
+renderStep();
+updateSummary();
+</script>
+</body>
+</html>
