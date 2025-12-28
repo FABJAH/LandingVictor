@@ -434,18 +434,42 @@ document.getElementById('btnDownload').addEventListener('click', ()=>{
   const blob = new Blob([data], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'datos-landing.json'; a.click();
 });
-document.getElementById('btnMail').addEventListener('click', ()=>{
+document.getElementById('btnMail').addEventListener('click', async ()=>{
   collectExtras();
   const t = translations[currentLang];
   const gdpr = document.getElementById('gdpr');
   if(!gdpr.checked){ alert(t.gdprRequired); return; }
-  const subject = encodeURIComponent('URGENTE - Contacto desde landing: ' + (state.nombre || 'sin nombre'));
-  const body = encodeURIComponent(JSON.stringify(state, null, 2));
-  // abre cliente de correo con body (nota: puede truncarse en algunos clientes)
-  window.location.href = `mailto:vhorcasitas@amersoc.com?subject=${subject}&body=${body}`;
-  // mostrar confirmación y reiniciar
-  alert(t.sentConfirm);
-  setTimeout(()=>{ location.reload(); }, 500);
+
+  const subjectText = 'URGENTE - Contacto desde landing: ' + (state.nombre || 'sin nombre');
+  const payload = {
+    _subject: subjectText,
+    _replyto: state.email || '',
+    nombre: state.nombre,
+    apellido: state.apellido,
+    email: state.email,
+    telefono: state.telefono,
+    empresa: state.empresa,
+    equipo: state.equipo,
+    target: state.target,
+    targetGeografico: state.targetGeografico,
+    ayuda: (state.ayuda || []).join(', '),
+    compromiso: state.compromiso,
+    resumenAyuda: state.resumenAyuda,
+    linkedinPersonal: state.linkedinPersonal,
+    linkedinEmpresa: state.linkedinEmpresa,
+    newsletter: state.newsletter ? 'sí' : 'no',
+    gdpr: state.gdpr ? 'aceptado' : 'no-aceptado',
+    full_json: JSON.stringify(state)
+  };
+
+  const ok = await sendToFormspree(payload);
+  if(ok){
+    alert(t.sentConfirm);
+    setTimeout(()=>{ location.reload(); }, 500);
+  } else {
+    const errorMsg = currentLang === 'en' ? 'There was a problem sending the data.' : 'Hubo un problema al enviar los datos.';
+    alert(errorMsg);
+  }
 });
 
 function collectExtras(){
@@ -453,6 +477,30 @@ function collectExtras(){
   state.linkedinEmpresa = linkedinEmpresa.value.trim();
   state.newsletter = document.getElementById('newsletter').checked;
   state.gdpr = document.getElementById('gdpr').checked;
+}
+
+/* --- Envío a Formspree --- */
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/abcd1234"; // TODO: reemplaza con tu URL real
+
+async function sendToFormspree(data) {
+  try {
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
 }
 
 /* helper */
