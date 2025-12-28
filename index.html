@@ -440,6 +440,11 @@ document.getElementById('btnMail').addEventListener('click', async ()=>{
   const gdpr = document.getElementById('gdpr');
   if(!gdpr.checked){ alert(t.gdprRequired); return; }
 
+  const btn = document.getElementById('btnMail');
+  const prevText = btn.innerText;
+  btn.disabled = true;
+  btn.innerText = currentLang === 'en' ? 'Sending…' : 'Enviando…';
+
   const subjectText = 'URGENTE - Contacto desde landing: ' + (state.nombre || 'sin nombre');
   const payload = {
     _subject: subjectText,
@@ -469,6 +474,8 @@ document.getElementById('btnMail').addEventListener('click', async ()=>{
   } else {
     const errorMsg = currentLang === 'en' ? 'There was a problem sending the data.' : 'Hubo un problema al enviar los datos.';
     alert(errorMsg);
+    btn.disabled = false;
+    btn.innerText = prevText;
   }
 });
 
