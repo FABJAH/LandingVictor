@@ -122,7 +122,8 @@ let currentLang = 'es';
 
 const translations = {
   es: {
-    welcome: 'Hola 👋 Soy el asistente de Victor. ¿Cómo te llamas?',
+    introPrompt: 'Ayúdanos a comprender la naturaleza de tu solicitud para que podamos preparar el proceso y responder de manera oportuna y eficaz.',
+    welcome: 'Hola 👋 Soy el programador asistente de Victor. ¿Cómo te llamas?',
     nombre: 'Tu nombre',
     apellido: 'Tu apellido',
     email: 'Tu correo electrónico',
@@ -131,7 +132,7 @@ const translations = {
     equipo: '¿Cuántas personas hay en tu equipo?',
     target: 'Describe tu target (ej: pymes, consumidores 25-40, B2B)',
     targetGeografico: 'Target geográfico principal (ej: Barcelona, España, Europa)',
-    ayudaQuestion: '¿Qué tipo de ayuda necesitas? (puedes elegir varias)',
+    ayudaQuestion: 'Describe a quién le gustaría que le presentara o presentemos su proyecto.',
     ayudaOptions: [
       'Colaboración con el target',
       'Venta de servicios',
@@ -142,8 +143,8 @@ const translations = {
       'Target geográfico',
       'Donaciones para ONGs'
     ],
-    compromisoQuestion: '¿Qué tan comprometido estás con el proyecto?',
-    compromisoOptions: ['Explorando idea','En desarrollo','Listo para lanzar','Buscando inversión','Buscando clientes'],
+    compromisoQuestion: '¿En qué etapa estás?',
+    compromisoOptions: ['Researching options','Actively searching','Seeking investment'],
     resumenAyudaText: 'Cuéntanos brevemente qué tipo de ayuda necesitas (opcional)',
     resumenAyudaQuestion: '¿Quieres añadir más detalles sobre qué necesitas específicamente? (Opcional)',
     confirm: 'Perfecto. Antes de finalizar, por favor completa las casillas de LinkedIn si quieres y acepta el consentimiento GDPR en la columna derecha.',
@@ -158,9 +159,9 @@ const translations = {
     linkedinLabel: 'LinkedIn personal y empresa',
     linkedinPersonalPh: 'LinkedIn personal (opcional)',
     linkedinEmpresaPh: 'LinkedIn empresa (opcional)',
-    newsletterLabel: '¿Dado de alta en la newsletter?',
+    newsletterLabel: 'Por favor confirma si estás suscrito a Barcelona-metropolitan.com (requerido).',
     newsletterLink: 'Suscríbete aquí',
-    newsletterCheck: 'Sí, estoy suscrito',
+    newsletterCheck: 'Sí, confirmo que estoy suscrito a Barcelona-metropolitan.com',
     gdprLabel: 'Consentimiento (obligatorio)',
     gdprText: 'Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.',
     btnMail: 'Enviar por correo',
@@ -169,12 +170,13 @@ const translations = {
     resetBtn: '🔄',
     botHelper: 'El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄',
     gdprRequired: 'Debes aceptar el consentimiento GDPR antes de copiar/enviar.',
-    sentConfirm: '✓ Información enviada a Victor. La página se reiniciará.',
+    sentConfirm: '✓ Información enviada a Victor. Se pondrá en contacto contigo en breve. La página se reiniciará.',
     resetConfirm: '¿Seguro que quieres reiniciar el chat? Se perderán todos los datos.',
     selectedPrefix: 'Seleccionaste:',
     pleaseEnter: 'Por favor ingresa'
   },
   en: {
+    introPrompt: 'Help us understand the nature of your request so we can prepare the process and respond promptly and effectively.',
     welcome: 'Hello 👋 I\'m Victor\'s assistant. What\'s your name?',
     nombre: 'Your name',
     apellido: 'Your surname',
@@ -195,8 +197,8 @@ const translations = {
       'Geographic target',
       'NGO donations'
     ],
-    compromisoQuestion: 'How committed are you to the project?',
-    compromisoOptions: ['Exploring idea','In development','Ready to launch','Seeking investment','Seeking clients'],
+    compromisoQuestion: 'Which stage are you in?',
+    compromisoOptions: ['Researching options','Actively searching','Seeking investment', 'seeking Clients', 'Qualifying Options'],
     resumenAyudaText: 'Tell us briefly what kind of help you need (optional)',
     resumenAyudaQuestion: 'Do you want to add more details about what you specifically need? (Optional)',
     confirm: 'Perfect. Before finishing, please complete the LinkedIn fields if you wish and accept the GDPR consent in the right column.',
@@ -222,7 +224,7 @@ const translations = {
     resetBtn: '🔄',
     botHelper: 'The bot will guide you step by step. You can edit the data directly in the summary or restart with 🔄',
     gdprRequired: 'You must accept GDPR consent before copying/sending.',
-    sentConfirm: '✓ Information sent to Victor. The page will restart.',
+    sentConfirm: '✓ Information sent to Victor. He will contact you shortly. The page will restart.',
     resetConfirm: 'Are you sure you want to restart the chat? All data will be lost.',
     selectedPrefix: 'You selected:',
     pleaseEnter: 'Please enter'
@@ -238,6 +240,7 @@ const state = {
 function getSteps() {
   const t = translations[currentLang];
   return [
+    {id:'intro', type:'bot', text: t.introPrompt},
     {id:'welcome', type:'bot', text: t.welcome},
     {id:'nombre', type:'input', key:'nombre', placeholder: t.nombre},
     {id:'apellido', type:'input', key:'apellido', placeholder: t.apellido},
