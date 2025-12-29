@@ -484,12 +484,22 @@ async function sendToFormspree(data) {
       body: JSON.stringify(data)
     });
 
+    // Try to extract diagnostic info from Formspree
+    let info = {};
+    try { info = await res.json(); } catch {}
+    console.log('[Formspree] status:', res.status, 'info:', info);
+
     if (res.ok) {
       return true;
     } else {
+      // Surface useful errors to help debugging in production
+      const msg = info && (info.error || info.message);
+      alert(msg ? ('Formspree: ' + msg) : (currentLang === 'en' ? 'Form submit failed.' : 'Fallo al enviar el formulario.'));
       return false;
     }
   } catch (e) {
+    console.error('[Formspree] network error:', e);
+    alert(currentLang === 'en' ? 'Network error sending the form.' : 'Error de red al enviar el formulario.');
     return false;
   }
 }
