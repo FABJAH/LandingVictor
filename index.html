@@ -5,48 +5,473 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Landing autónoma — Contacto</title>
 <style>
-  :root{--accent:#0b6efd;--bg:#f7f8fb;--card:#ffffff;--muted:#6b7280}
-  body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:#111}
-  .container{max-width:980px;margin:28px auto;padding:20px}
-  header{height:auto;min-height:280px;border-radius:10px;background:linear-gradient(135deg,#0b6efd33,#7dd3fc33);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#001f3f}
-  header .banner-text{z-index:2;text-align:center;color:#03396b;display:none}
-  header h1{margin:0;font-size:28px}
-  header p{margin:6px 0 0;color:var(--muted)}
-  .banner-controls{position:absolute;right:8px;bottom:8px;z-index:3;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
-  .banner-controls label{background:#fff;padding:4px 8px;border-radius:4px;display:inline-block;cursor:pointer;border:1px solid #e6e9ef;font-size:11px;opacity:0.7;transition:opacity 0.2s}
-  .banner-controls label:hover{opacity:1}
-  .banner-controls select{opacity:0.7;transition:opacity 0.2s}
-  .banner-controls select:hover{opacity:1}
-  .banner-preview{position:absolute;inset:0;background-size:100% 110%;background-position:center;background-repeat:no-repeat;opacity:1;background-image:url('banner.jpeg')}
-  .card{background:var(--card);border-radius:10px;padding:18px;margin-top:18px;box-shadow:0 6px 18px rgba(12,20,40,0.06)}
-  .chat{display:flex;gap:18px}
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root{
+    --accent:#2563eb;
+    --accent-hover:#1d4ed8;
+    --bg:#f8fafc;
+    --card:#ffffff;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --text-primary:#0f172a;
+    --text-secondary:#475569;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:linear-gradient(135deg,#f8fafc 0%,#e0e7ff 100%);
+    color:var(--text-primary);
+    line-height:1.6;
+    font-size:15px;
+  }
+
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:32px 24px;
+  }
+
+  header{
+    height:auto;
+    min-height:320px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    background:#001f3f;
+    box-shadow:0 20px 60px rgba(0,31,63,0.3);
+    margin-bottom:32px;
+  }
+
+  header .banner-text{
+    z-index:2;
+    text-align:center;
+    color:#03396b;
+    display:none;
+  }
+
+  header h1{margin:0;font-size:32px;font-weight:700}
+  header p{margin:8px 0 0;color:var(--muted);font-weight:400}
+
+  .banner-controls{
+    position:absolute;
+    right:16px;
+    bottom:16px;
+    z-index:3;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-items:flex-end;
+  }
+
+  .banner-controls select{
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(10px);
+    padding:8px 12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.3);
+    cursor:pointer;
+    font-size:18px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    transition:all 0.3s ease;
+  }
+
+  .banner-controls select:hover{
+    background:rgba(255,255,255,1);
+    box-shadow:0 6px 16px rgba(0,0,0,0.15);
+    transform:translateY(-2px);
+  }
+
+  .banner-preview{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center 38%;
+
+    background-repeat:no-repeat;
+    opacity:1;
+    background-image:url('banner.jpeg');
+    image-rendering:-webkit-optimize-contrast;
+    image-rendering:crisp-edges;
+    filter:brightness(1.05) contrast(1.05);
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:28px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.06);
+    border:1px solid var(--border);
+  }
+
+  .chat{display:flex;gap:24px}
   .chat .left{flex:1}
-  .chat .right{width:360px}
-  .bot-window{height:420px;border-radius:8px;border:1px solid #e6e9ef;padding:12px;overflow:auto;background:#fbfdff}
-  .message{margin:8px 0;display:flex}
+  .chat .right{width:400px}
+
+  .bot-window{
+    height:480px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    padding:20px;
+    overflow:auto;
+    background:linear-gradient(to bottom,#fafbfc,#ffffff);
+    box-shadow:inset 0 2px 8px rgba(0,0,0,0.03);
+  }
+
+  .message{margin:12px 0;display:flex}
   .msg.bot{justify-content:flex-start}
   .msg.user{justify-content:flex-end}
-  .bubble{max-width:78%;padding:10px 12px;border-radius:12px;background:#eef6ff;color:#022c43}
-  .bubble.user{background:var(--accent);color:#fff}
-  .controls{display:flex;gap:8px;margin-top:10px}
-  input[type="text"],input[type="email"],input[type="tel"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef}
-  .small-row{display:flex;gap:8px}
+
+  .bubble{
+    max-width:80%;
+    padding:14px 18px;
+    border-radius:16px;
+    background:#f1f5f9;
+    color:var(--text-primary);
+    font-size:14.5px;
+    line-height:1.5;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .bubble.user{
+    background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+    color:#fff;
+    box-shadow:0 4px 12px rgba(37,99,235,0.25);
+  }
+
+  .controls{display:flex;gap:10px;margin-top:16px}
+
+  input[type="text"],input[type="email"],input[type="tel"],select,textarea{
+    width:100%;
+    padding:12px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--border);
+    font-family:inherit;
+    font-size:14px;
+    transition:all 0.2s ease;
+    background:#fff;
+  }
+
+  input:focus,select:focus,textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  .small-row{display:flex;gap:10px}
   .small-row input{flex:1}
-  .options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-  .option-btn{padding:8px;border-radius:8px;border:1px solid #e6e9ef;background:#fff;color:#111;cursor:pointer}
-  .option-btn.active{border-color:var(--accent);background:#f0f7ff;box-shadow:0 4px 12px rgba(11,110,253,0.12)}
-  .footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  button{background:var(--accent);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
-  button.ghost{background:#fff;color:var(--accent);border:1px solid #e6e9ef}
-  .muted{color:var(--muted);font-size:13px}
-  .consent{font-size:13px;margin-top:8px}
-  .links-row{display:flex;gap:8px;margin-top:8px}
+
+  .options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:10px;
+    margin-top:12px;
+  }
+
+  .option-btn{
+    padding:12px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--border);
+    background:#fff;
+    color:var(--text-primary);
+    cursor:pointer;
+    font-size:14px;
+    font-weight:500;
+    transition:all 0.2s ease;
+    text-align:center;
+  }
+
+  .option-btn:hover{
+    border-color:var(--accent);
+    background:#f0f6ff;
+    transform:translateY(-1px);
+  }
+
+  .option-btn.active{
+    border-color:var(--accent);
+    background:linear-gradient(135deg,#eff6ff,#dbeafe);
+    color:var(--accent);
+    box-shadow:0 4px 12px rgba(37,99,235,0.15);
+    font-weight:600;
+  }
+
+  .footer-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:20px;
+  }
+
+  button{
+    background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+    color:#fff;
+    padding:12px 24px;
+    border-radius:12px;
+    border:0;
+    cursor:pointer;
+    font-weight:600;
+    font-size:15px;
+    transition:all 0.2s ease;
+    box-shadow:0 4px 12px rgba(37,99,235,0.2);
+  }
+
+  button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(37,99,235,0.3);
+  }
+
+  button.ghost{
+    background:#fff;
+    color:var(--accent);
+    border:1.5px solid var(--border);
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  button.ghost:hover{
+    background:#f8fafc;
+    border-color:var(--accent);
+  }
+
+  .muted{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:500;
+  }
+
+  .consent{
+    font-size:13px;
+    margin-top:12px;
+    line-height:1.6;
+    color:var(--text-secondary);
+  }
+
+  .consent input[type="checkbox"]{
+    margin-right:8px;
+    width:18px;
+    height:18px;
+    cursor:pointer;
+  }
+
+  .links-row{display:flex;gap:10px;margin-top:10px}
   .links-row input{flex:1}
-  pre{background:#0b1220;color:#e6f0ff;padding:12px;border-radius:8px;overflow:auto}
-  .editable{background:#fffaeb;padding:2px 6px;border-radius:4px;cursor:text;border:1px dashed #fbbf24}
-  .editable:hover{background:#fef3c7}
-  .editable:focus{outline:2px solid var(--accent);background:#fff}
-  @media(max-width:880px){.chat{flex-direction:column}.chat .right{width:100%}}
+
+  h3{
+    margin:0 0 20px 0;
+    font-size:20px;
+    font-weight:700;
+    color:var(--text-primary);
+  }
+
+  a{
+    color:var(--accent);
+    text-decoration:none;
+    font-weight:600;
+    transition:color 0.2s ease;
+  }
+
+  a:hover{
+    color:var(--accent-hover);
+    text-decoration:underline;
+  }
+
+  .editable{
+    background:#fefce8;
+    padding:4px 8px;
+    border-radius:6px;
+    cursor:text;
+    border:1px dashed #facc15;
+    transition:all 0.2s ease;
+  }
+
+  .editable:hover{background:#fef9c3}
+  .editable:focus{
+    outline:none;
+    border-color:var(--accent);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+  }
+
+  label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:500;
+    color:var(--text-secondary);
+  }
+
+  /* Responsive Design - Mobile First */
+  @media(max-width:640px){
+    body{font-size:14px}
+
+    .container{padding:16px 12px}
+
+    header{
+      min-height:200px;
+      aspect-ratio:auto;
+      max-height:none;
+      border-radius:12px;
+      margin-bottom:20px;
+    }
+
+    /* Evitar distorsión del banner en móvil */
+    .banner-preview{
+      background-size:cover;
+      background-position:center 38%;
+  
+      image-rendering:auto;
+      filter:brightness(1.0) contrast(1.02);
+    }
+
+    header h1{font-size:24px}
+
+    .banner-controls{
+      right:12px;
+      bottom:12px;
+    }
+
+    .banner-controls select{
+      padding:6px 10
+      px;
+      font-size:16px;
+      border-radius:10px;
+    }
+
+    .card{
+      padding:16px;
+      border-radius:12px;
+    }
+
+    .chat{
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .chat .right{width:100%}
+
+    .bot-window{
+      height:360px;
+      padding:12px;
+      border-radius:12px;
+    }
+
+    .bubble{
+      max-width:85%;
+      padding:10px 14px;
+      font-size:14px;
+    }
+
+    .options{
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+
+    .option-btn{
+      padding:10px 14px;
+      font-size:13px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea{
+      padding:10px 14px;
+      font-size:14px;
+    }
+
+    button{
+      padding:10px 18px;
+      font-size:14px;
+      width:100%;
+    }
+
+    button.ghost{width:100%}
+
+    .footer-actions{
+      flex-direction:column;
+      gap:8px;
+    }
+
+    h3{font-size:18px}
+
+    .links-row{
+      flex-direction:column;
+      gap:8px;
+    }
+  }
+
+  /* Tablet */
+  @media(min-width:641px) and (max-width:880px){
+    .container{padding:24px 16px}
+
+    header{
+      min-height:260px;
+      border-radius:16px;
+    }
+
+    header h1{font-size:28px}
+
+    .chat{
+      flex-direction:column;
+      gap:20px;
+    }
+
+    .chat .right{width:100%}
+
+    .bot-window{height:420px}
+
+    .options{
+      grid-template-columns:repeat(2,1fr);
+    }
+  }
+
+  /* Desktop Large */
+  @media(min-width:1200px){
+    .container{
+      max-width:1200px;
+      padding:40px 32px;
+    }
+
+    header{min-height:360px}
+
+    .chat .right{width:440px}
+
+    .bot-window{height:520px}
+
+    /* Mostrar más ancho de la foto en desktop grande */
+    .banner-preview{
+      background-size:102%;
+      background-position:center 40%;
+    }
+  }
+
+  /* Touch Devices - Larger tap targets */
+  @media(pointer:coarse){
+    button,
+    .option-btn,
+    input[type="checkbox"]{
+      min-height:44px;
+    }
+
+    .banner-controls select{
+      min-height:44px;
+      padding:10px 14px;
+    }
+  }
+
+  /* Print Styles */
+  @media print{
+    body{background:#fff}
+    header{box-shadow:none}
+    .card{box-shadow:none;border:1px solid #ddd}
+    .banner-controls{display:none}
+    button{display:none}
+  }
 </style>
 </head>
 <body>
@@ -71,34 +496,34 @@
 
       <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
         <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." />
-        <button id="sendBtn">Enviar</button>
+        <button id="sendBtn">📤</button>
         <button id="resetBtn" class="ghost" title="Reiniciar chat">🔄</button>
       </div>
-      <div class="muted" style="margin-top:8px">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
+      <div class="muted" style="margin-top:8px;display:none">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
     </div>
 
     <div class="right">
       <div class="card" style="padding:12px">
-        <h3>Resumen rápido</h3>
-        <div id="summary" class="muted">Aún no hay datos.</div>
+        <h3 id="summaryTitle">Resumen rápido</h3>
+        <div id="summary" class="muted" style="display:none !important">Aún no hay datos.</div>
 
         <div style="margin-top:12px">
-          <label class="muted">LinkedIn personal y empresa</label>
+          <label class="muted" id="linkedinLabel">LinkedIn</label>
           <div class="links-row">
-            <input id="linkedinPersonal" type="text" placeholder="LinkedIn personal (opcional)" />
-            <input id="linkedinEmpresa" type="text" placeholder="LinkedIn empresa (opcional)" />
+            <input id="linkedinPersonal" type="text" placeholder="LinkedIn personal" />
+            <input id="linkedinEmpresa" type="text" placeholder="LinkedIn de la empresa" />
           </div>
         </div>
 
         <div style="margin-top:12px">
-          <label class="muted">¿Dado de alta en la newsletter? <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">Suscríbete aquí</a></label>
+          <label class="muted" id="newsletterMainLabel">¿Ya estás suscrito a mi Newsletter? <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">Suscríbete aquí</a></label>
           <div style="margin-top:6px">
             <label><input id="newsletter" type="checkbox" /> Sí, estoy suscrito</label>
           </div>
         </div>
 
         <div style="margin-top:12px">
-          <label class="muted">Consentimiento (obligatorio)</label>
+          <label class="muted" id="gdprLabelElement">Consentimiento (obligatorio)</label>
           <div class="consent">
             <label><input id="gdpr" type="checkbox" /> Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.</label>
           </div>
@@ -107,66 +532,77 @@
         <div class="footer-actions">
           <button id="btnCopy" class="ghost" style="display:none">Copiar JSON</button>
           <button id="btnDownload" class="ghost" style="display:none">Descargar JSON</button>
-          <button id="btnMail" class="ghost">Enviar por correo</button>
+          <button id="btnMail" class="ghost">Enviar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div style="margin-top:14px" class="muted">Puedes personalizar textos, colores y el comportamiento del botón de envío en el código.</div>
+  <div style="margin-top:14px;display:none !important" class="muted">Puedes personalizar textos, colores y el comportamiento del botón de envío en el código.</div>
 </div>
 
 <script>
 /* --- Sistema de idiomas --- */
-let currentLang = 'en';
+let currentLang = 'es';
 
 const translations = {
   es: {
     introPrompt: 'Ayúdanos a comprender la naturaleza de tu solicitud para que podamos preparar el proceso y responder de manera oportuna y eficaz.',
-    welcome: 'Hola 👋 Soy el programador asistente de Victor. ¿Cómo te llamas?',
+    welcome: 'Hola 👋 Soy el asistente de Victor. ¿Cómo te llamas?',
     nombre: 'Tu nombre',
     apellido: 'Tu apellido',
     email: 'Tu correo electrónico',
     telefono: 'Teléfono',
     empresa: 'Nombre de la empresa (opcional)',
-    equipo: '¿Cuántas personas hay en tu equipo?',
     target: 'Describe tu target (ej: pymes, consumidores 25-40, B2B)',
     targetGeografico: 'Target geográfico principal (ej: Barcelona, España, Europa)',
-    ayudaQuestion: 'Describe a quién le gustaría que le presentara o presentemos su proyecto.',
+    ayudaQuestion: '¿Qué tipo de apoyo o soluciones beneficiarían más a tu proyecto?',
     ayudaOptions: [
-      'Colaboración con el target',
-      'Venta de servicios',
-      'Levantar capital',
-      'Búsqueda de distribuidores',
-      'Asesoría comercial',
-      'Valor del producto/servicio (pago: año/mes/única vez)',
-      'Target geográfico',
-      'Donaciones para ONGs'
+      'Salud, bienestar y belleza',
+      'Expansión internacional',
+      'Captación de capital',
+      'Búsqueda de inversores',
+      'Compradores potenciales',
+      'Distribuidores potenciales',
+      'Donaciones a ONG',
+      'Asesor de confianza',
+      'Gestor de pagos',
+      'Auditoría comercial',
+      'Desarrollo de software',
+      'Apoyo en negociaciones',
+      'Constitución de empresas',
+      'Inmigración y derecho de familia',
+      'Búsqueda de talento',
+      'Impuestos y gestión patrimonial',
+      'Educación internacional',
+      'Fusiones y adquisiciones'
     ],
-    compromisoQuestion: '¿En qué etapa estás?',
-    compromisoOptions: ['Researching options','Actively searching','Seeking investment'],
-    resumenAyudaText: 'Cuéntanos brevemente qué tipo de ayuda necesitas (opcional)',
-    resumenAyudaQuestion: '¿Quieres añadir más detalles sobre qué necesitas específicamente? (Opcional)',
-    confirm: 'Perfecto. Antes de finalizar, por favor completa las casillas de LinkedIn si quieres y acepta el consentimiento GDPR en la columna derecha.',
-    end: 'Cuando aceptes el consentimiento, pulsa "Enviar por correo" o descarga los datos.',
-    selectOptions: 'Selecciona las opciones y luego pulsa Enviar.',
-    useButtons: 'Usa los botones que aparecen en el chat para esta pregunta.',
+    compromisoQuestion: '¿En qué etapa te encuentras actualmente?',
+    compromisoOptions: ['Investigando opciones','Búsqueda activa','Buscando inversión', 'En Busca de clientes'],
+    resumenAyudaText: 'Cuéntanos brevemente qué tipo de apoyo necesitas ',
+    resumenAyudaQuestion: '¿Deseas añadir detalles adicionales sobre tus necesidades específicas? (Opcional)',
+    confirm: '¡Perfecto! Antes de finalizar, por favor completa los campos de LinkedIn si lo deseas y acepta el consentimiento GDPR en la columna derecha.',
+    end: 'Una vez aceptes el consentimiento, haz clic en "Enviar" o descarga los datos.',
+    selectOptions: 'Selecciona tus opciones y luego haz clic en Enviar.',
+    useButtons: 'Por favor utiliza los botones mostrados en el chat para responder esta pregunta.',
     requiredField: 'Este campo es obligatorio.',
     validEmail: 'Introduce un correo válido.',
     selectAtLeastOne: 'Por favor selecciona al menos una opción.',
     summary: 'Resumen rápido',
     noData: 'Aún no hay datos.',
-    linkedinLabel: 'LinkedIn personal y empresa',
-    linkedinPersonalPh: 'LinkedIn personal (opcional)',
-    linkedinEmpresaPh: 'LinkedIn empresa (opcional)',
+    linkedinLabel: 'LinkedIn',
+    linkedinPersonalPh: 'LinkedIn personal',
+    linkedinEmpresaPh: 'LinkedIn de la empresa',
     newsletterLabel: 'Por favor confirma si estás suscrito a Barcelona-metropolitan.com (requerido).',
     newsletterLink: 'Suscríbete aquí',
     newsletterCheck: 'Sí, confirmo que estoy suscrito a Barcelona-metropolitan.com',
     gdprLabel: 'Consentimiento (obligatorio)',
     gdprText: 'Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.',
-    btnMail: 'Enviar por correo',
+    summaryLabel: 'Resumen rápido',
+    newsletterLabelMain: '¿Ya estás suscrito a mi Newsletter?',
+    btnMail: 'Enviar',
     sendPlaceholder: 'Escribe tu respuesta aquí...',
-    sendBtn: 'Enviar',
+    sendBtn: '📤',
     resetBtn: '🔄',
     botHelper: 'El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄',
     gdprRequired: 'Debes aceptar el consentimiento GDPR antes de copiar/enviar.',
@@ -177,63 +613,74 @@ const translations = {
   },
   en: {
     introPrompt: 'Help us understand the nature of your request so we can prepare and respond promptly and effectively.',
-    welcome: 'Hello 👋 I\'m Victor\'s programming assistant. What\'s your name?',
+    welcome: 'Hello 👋 I\'m Victor\'s scheduling assistant. What\'s your name?',
     nombre: 'Your name',
     apellido: 'Your last name',
     email: 'Your email address',
     telefono: 'Phone number',
     empresa: 'Company name (optional)',
-    equipo: 'How many people are on your team?',
     target: 'Describe your target audience (e.g., SMEs, consumers 25-40, B2B)',
     targetGeografico: 'Primary geographic target (e.g., Barcelona, Spain, Europe)',
-    ayudaQuestion: 'Describe who you would like us to introduce your project to.',
+    ayudaQuestion: 'What type of support or solutions would best serve your project?',
     ayudaOptions: [
-      'Target collaboration',
-      'Service sales',
-      'Raise capital',
-      'Distributor search',
-      'Commercial advisory',
-      'Product/service value (payment: yearly/monthly/one-time)',
-      'Geographic target',
-      'NGO donations'
+      'Health, wellness and beauty',
+      'International Expansion',
+      'Capital Raising',
+      'Investor Search',
+      'Potential Buyers',
+      'Potential Distributors',
+      'NGO Donations',
+      'Trusted Broker',
+      'Pay Master',
+      'Commercial Due Diligence',
+      'Software Development',
+      'Negotiation Support',
+      'Corporate Set Up',
+      'Immigration + Family Law',
+      'Talent Search',
+      'Tax + Wealth Management',
+      'International Education',
+      'Mergers & Acquisitions'
     ],
-    compromisoQuestion: 'What stage are you at?',
-    compromisoOptions: ['Researching options','Actively searching','Seeking investment'],
-    resumenAyudaText: 'Briefly tell us what kind of help you need (optional)',
-    resumenAyudaQuestion: 'Would you like to add more details about what you specifically need? (Optional)',
-    confirm: 'Perfect. Before submitting, please complete the LinkedIn fields if desired and accept the GDPR consent in the right column.',
-    end: 'Once you accept the consent, click "Send by email" or download the data.',
-    selectOptions: 'Select your options and then press Send.',
-    useButtons: 'Please use the buttons shown in the chat for this question.',
+    compromisoQuestion: 'What stage are you currently at?',
+    compromisoOptions: ['Researching Options','Actively Searching','Seeking Investment'],
+    resumenAyudaText: 'Briefly tell us what kind of support you need (optional)',
+    resumenAyudaQuestion: 'Would you like to add any additional details about your specific requirements? (Optional)',
+    confirm: 'Perfect! Before submitting, please complete the LinkedIn fields if desired and accept the GDPR consent in the right column.',
+    end: 'Once you accept the consent, click "Submit" or download the data.',
+    selectOptions: 'Select your options and then click Send.',
+    useButtons: 'Please use the buttons displayed in the chat to answer this question.',
     requiredField: 'This field is required.',
     validEmail: 'Please enter a valid email address.',
     selectAtLeastOne: 'Please select at least one option.',
     summary: 'Quick Summary',
     noData: 'No data yet.',
-    linkedinLabel: 'Personal and Company LinkedIn',
-    linkedinPersonalPh: 'Personal LinkedIn (optional)',
-    linkedinEmpresaPh: 'Company LinkedIn (optional)',
-    newsletterLabel: 'Please confirm you are subscribed to Barcelona-metropolitan.com (required).',
+    linkedinLabel: 'LinkedIn',
+    linkedinPersonalPh: 'Personal LinkedIn',
+    linkedinEmpresaPh: 'Company LinkedIn',
+    newsletterLabel: 'Are you subscribed to our Newsletter? (required).',
     newsletterLink: 'Subscribe here',
-    newsletterCheck: 'Yes, I confirm I am subscribed to Barcelona-metropolitan.com',
+    newsletterCheck: 'Yes, I confirm I am subscribed to our Newsletter',
     gdprLabel: 'Consent (required)',
     gdprText: 'I accept that my data will be processed by the entity responsible for this landing page in accordance with Regulation (EU) 2016/679 and applicable legislation. I understand that I can exercise my rights of access, rectification, deletion, and opposition.',
-    btnMail: 'Send by Email',
+    summaryLabel: 'Quick Summary',
+    newsletterLabelMain: 'Are you subscribed to my Newsletter?',
+    btnMail: 'Submit',
     sendPlaceholder: 'Type your answer here...',
-    sendBtn: 'Send',
+    sendBtn: '📤',
     resetBtn: '🔄',
-    botHelper: 'The bot will guide you step by step. You can edit data directly in the summary or restart with 🔄',
+    botHelper: '',
     gdprRequired: 'You must accept GDPR consent before copying or sending.',
-    sentConfirm: '✓ Information sent to Victor. He will contact you shortly. The page will restart.',
+    sentConfirm: '✓ Information sent to Victor. He will get in touch with you shortly. The page will restart.',
     resetConfirm: 'Are you sure you want to restart the chat? All data will be lost.',
     selectedPrefix: 'You selected:',
-    pleaseEnter: 'Please enter'
+    pleaseEnter: 'Please provide your'
   }
 };
 
 /* --- Datos y flujo del bot --- */
 const state = {
-  nombre: '', apellido: '', email: '', telefono: '', empresa: '', equipo: '', target: '', targetGeografico: '',
+  nombre: '', apellido: '', email: '', telefono: '', empresa: '', target: '', targetGeografico: '',
   ayuda: [], compromiso: '', resumenAyuda: '', newsletter: false, linkedinPersonal:'', linkedinEmpresa:'', gdpr:false
 };
 
@@ -247,7 +694,6 @@ function getSteps() {
     {id:'email', type:'input', key:'email', placeholder: t.email, validate:'email'},
     {id:'telefono', type:'input', key:'telefono', placeholder: t.telefono},
     {id:'empresa', type:'input', key:'empresa', placeholder: t.empresa},
-    {id:'equipo', type:'input', key:'equipo', placeholder: t.equipo},
     {id:'target', type:'input', key:'target', placeholder: t.target},
     {id:'targetGeografico', type:'input', key:'targetGeografico', placeholder: t.targetGeografico},
     {id:'ayuda', type:'options', key:'ayuda', text: t.ayudaQuestion, options: t.ayudaOptions},
@@ -388,7 +834,6 @@ function updateSummary(){
   if(state.email) parts.push('<strong>Email:</strong> <span contenteditable="true" class="editable" data-key="email">'+escapeHtml(state.email)+'</span>');
   if(state.telefono) parts.push('<strong>Tel:</strong> <span contenteditable="true" class="editable" data-key="telefono">'+escapeHtml(state.telefono)+'</span>');
   if(state.empresa) parts.push('<strong>Empresa:</strong> <span contenteditable="true" class="editable" data-key="empresa">'+escapeHtml(state.empresa)+'</span>');
-  if(state.equipo) parts.push('<strong>Equipo:</strong> <span contenteditable="true" class="editable" data-key="equipo">'+escapeHtml(state.equipo)+'</span>');
   if(state.target) parts.push('<strong>Target:</strong> <span contenteditable="true" class="editable" data-key="target">'+escapeHtml(state.target)+'</span>');
   if(state.targetGeografico) parts.push('<strong>Target Geográfico:</strong> <span contenteditable="true" class="editable" data-key="targetGeografico">'+escapeHtml(state.targetGeografico)+'</span>');
   if(state.ayuda && state.ayuda.length) parts.push('<strong>Ayuda:</strong> '+escapeHtml(state.ayuda.join('; ')));
@@ -441,7 +886,6 @@ document.getElementById('btnMail').addEventListener('click', async ()=>{
     email: state.email,
     telefono: state.telefono,
     empresa: state.empresa,
-    equipo: state.equipo,
     target: state.target,
     targetGeografico: state.targetGeografico,
     ayuda: (state.ayuda || []).join(', '),
@@ -525,17 +969,35 @@ function updateUILanguage(){
   const t = translations[currentLang];
   document.getElementById('userInput').placeholder = t.sendPlaceholder;
   document.getElementById('sendBtn').innerText = t.sendBtn;
+  document.getElementById('summaryTitle').innerText = t.summaryLabel;
   document.querySelector('h3').innerText = t.summary;
-  document.querySelectorAll('.muted')[0].innerText = t.linkedinLabel;
+
+  // Update newsletter main label
+  const newsletterMainLabel = document.getElementById('newsletterMainLabel');
+  if(newsletterMainLabel) {
+    newsletterMainLabel.innerHTML = `${t.newsletterLabelMain} <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">${t.newsletterLink}</a>`;
+  }
+
+  // Update GDPR label element
+  const gdprLabelElement = document.getElementById('gdprLabelElement');
+  if(gdprLabelElement) {
+    gdprLabelElement.innerText = t.gdprLabel;
+  }
+
+  // Update LinkedIn label and placeholders
+  const linkedinLabelEl = document.getElementById('linkedinLabel');
+  if(linkedinLabelEl) linkedinLabelEl.innerText = t.linkedinLabel;
+
   document.getElementById('linkedinPersonal').placeholder = t.linkedinPersonalPh;
   document.getElementById('linkedinEmpresa').placeholder = t.linkedinEmpresaPh;
-  document.querySelectorAll('.muted')[1].innerHTML = `${t.newsletterLabel} <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">${t.newsletterLink}</a>`;
+
   // Update GDPR label text preserving the checkbox
   const gdprCheckbox = document.getElementById('gdpr');
   const gdprChecked = gdprCheckbox ? gdprCheckbox.checked : false;
   document.querySelector('.consent label').innerHTML = `<input id="gdpr" type="checkbox" ${gdprChecked ? 'checked' : ''} /> ${t.gdprText}`;
+
   document.getElementById('btnMail').innerText = t.btnMail;
-  document.querySelectorAll('.muted')[3].innerText = t.botHelper;
+
   // Update newsletter checkbox label
   const newsletterCheckbox = document.getElementById('newsletter');
   const newsletterChecked = newsletterCheckbox ? newsletterCheckbox.checked : false;
@@ -544,6 +1006,7 @@ function updateUILanguage(){
 }
 
 /* inicializa */
+updateUILanguage();
 renderStep();
 updateSummary();
 </script>
