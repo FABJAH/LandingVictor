@@ -408,15 +408,20 @@
     #sendBtn{display:none !important}
     #userInput{width:100% !important}
 
-    /* Reducir botón reset en móvil */
+    /* Reducir botón reset en móvil - sin espacio visible */
+    #resetContainer{
+      margin-top:0 !important;
+      padding:0 !important;
+      min-height:auto !important;
+    }
     #resetBtn{
-      padding:1px 4px !important;
+      padding:1px 3px !important;
       font-size:8px !important;
       min-width:auto !important;
-    }
-  }
-
-  /* Tablet */
+      line-height:1 !important;
+      border:none !important;
+      background:transparent !important;
+      box-shadow:none !important;
   @media(min-width:641px) and (max-width:880px){
     .container{padding:24px 16px}
 
@@ -509,7 +514,7 @@
         <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." style="flex:1;padding:12px 14px;font-size:14px" />
         <button id="sendBtn" style="padding:10px 14px;font-size:16px;min-width:auto;height:auto">📤</button>
       </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+      <div id="resetContainer" style="display:flex;justify-content:flex-end;margin-top:4px">
         <button id="resetBtn" class="ghost" title="Reiniciar chat" style="padding:2px 6px;font-size:10px">🔄</button>
       </div>
       <div class="muted" style="margin-top:8px;display:none">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
