@@ -110,7 +110,7 @@
     border:1px solid var(--border);
   }
 
-  .chat{display:flex;gap:24px}
+  .chat{display:flex;gap:20px;flex-direction:row}
   .chat .left{flex:1}
   .chat .right{width:400px}
 
@@ -454,14 +454,15 @@
   @media(min-width:1200px){
     .container{
       max-width:1200px;
-      padding:40px 32px;
+      padding:20px 24px;
     }
 
-    header{min-height:360px}
+    header{min-height:240px}
 
-    .chat .right{width:440px}
+    .chat{flex-direction:row !important}
+    .chat .right{width:380px}
 
-    .bot-window{height:480px}
+    .bot-window{height:340px}
 
     /* Mostrar foto completa en desktop grande */
     .banner-preview{
