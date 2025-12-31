@@ -311,18 +311,16 @@
     .container{padding:16px 12px}
 
     header{
-      min-height:200px;
-      aspect-ratio:auto;
-      max-height:none;
+      min-height:140px;
       border-radius:12px;
       margin-bottom:20px;
     }
 
     /* Evitar distorsión del banner en móvil */
     .banner-preview{
-      background-size:cover;
-      background-position:center 38%;
-  
+      background-size:contain;
+      background-position:center center;
+
       image-rendering:auto;
       filter:brightness(1.0) contrast(1.02);
     }
