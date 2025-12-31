@@ -28,7 +28,7 @@
         padding: 10px 2vw 8px 2vw !important;
       }
       .entrada-chat {
-        flex-direction: row !important;
+        flex-direction:row !important;
         gap: 4px !important;
       }
       #userInput {
@@ -264,22 +264,22 @@ const translations = {
     resetBtn: '🔄',
     botHelper: 'El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄',
     gdprRequired: 'Debes aceptar el consentimiento GDPR antes de enviar.',
-    sentConfirm: '✓ Información enviada a Victor. Se pondrá en contacto contigo en breve. La página se reiniciará.',
+    sentConfirm: '✓ Información enviada a Victor. Se pondrá en contacto contigo en breve. ten un buen dia!.',
     resetConfirm: '¿Seguro que quieres reiniciar el chat? Se perderán todos los datos.',
     selectedPrefix: 'Seleccionaste:',
     pleaseEnter: 'Por favor proporciona tu'
   },
   en: {
-    introPrompt: 'Help us understand the nature of your request so we can prepare and respond promptly and effectively.',
-    welcome: 'Hello 👋 I\'m Victor\'s assistant. What is your name?',
+    introPrompt: 'Please help us understand your request so we can respond quickly and effectively.',
+    welcome: 'Hello 👋 I am Victor\'s scheduling assistant. What is your name?',
     nombre: 'First name',
     apellido: 'Last name',
     email: 'Email address',
     telefono: 'Phone number',
     empresa: 'Company name (optional)',
-    target: 'Describe your target audience (e.g., SMEs, consumers 25-40, B2B)',
-    targetGeografico: 'Primary geographic target (e.g., Barcelona, Spain, Europe)',
-    ayudaQuestion: 'What type of support or solutions would best benefit your project?',
+    target: 'Describe your target audience (e.g. SMEs, consumers 25-40, B2B)',
+    targetGeografico: 'Main geographic target (e.g. Barcelona, Spain, Europe)',
+    ayudaQuestion: 'What kind of support or solutions would benefit your project most?',
     ayudaOptions: [
       'Health, wellness and beauty',
       'International expansion',
@@ -293,21 +293,21 @@ const translations = {
       'Commercial due diligence',
       'Software development',
       'Negotiation support',
-      'Corporate setup',
+      'Company formation',
       'Immigration and family law',
       'Talent acquisition',
       'Tax and wealth management',
       'International education',
       'Mergers and acquisitions'
     ],
-    compromisoQuestion: 'What stage are you currently at?',
-    compromisoOptions: ['Researching options', 'Actively seeking', 'Seeking investment', 'Looking for clients'],
-    resumenAyudaText: 'Briefly describe what kind of support you need (optional)',
-    resumenAyudaQuestion: 'Would you like to add any additional details about your specific requirements? (optional)',
-    confirm: 'Perfect! Before submitting, please complete the LinkedIn fields if desired and accept the GDPR consent in the right column.',
-    end: 'Once you accept the consent, click Submit or download the data.',
-    selectOptions: 'Select your options and then click Send.',
-    useButtons: 'Please use the buttons displayed in the chat to answer this question.',
+    compromisoQuestion: 'Which stage are you at right now?',
+    compromisoOptions: ['Researching options', 'Actively looking', 'Seeking investment', 'Looking for clients'],
+    resumenAyudaText: 'Briefly describe the support you need (optional)',
+    resumenAyudaQuestion: 'Would you like to add any other details about your needs? (optional)',
+    confirm: 'Great! Before finishing, please fill in the LinkedIn fields if you want and accept the GDPR consent on the right.',
+    end: 'Once you accept the consent, click submit or download your data.',
+    selectOptions: 'Select your options, then click send.',
+    useButtons: 'Please use the buttons in the chat to answer.',
     requiredField: 'This field is required.',
     validEmail: 'Please enter a valid email address.',
     selectAtLeastOne: 'Please select at least one option.',
@@ -318,9 +318,9 @@ const translations = {
     linkedinEmpresaPh: 'Company LinkedIn',
     newsletterLabel: 'Are you subscribed to our newsletter? (required)',
     newsletterLink: 'Subscribe here',
-    newsletterCheck: 'Yes, I confirm I am subscribed to the newsletter',
+    newsletterCheck: 'Yes, I am subscribed to the newsletter',
     gdprLabel: 'Consent (required)',
-    gdprText: 'I accept that my data will be processed by the entity responsible for this landing page in accordance with Regulation (EU) 2016/679 and applicable legislation. I understand that I can exercise my rights of access, rectification, deletion and opposition.',
+    gdprText: 'I accept that my data will be processed by the entity responsible for this landing page in accordance with Regulation (EU) 2016/679 and applicable law. I understand that I can exercise my rights of access, rectification, deletion, and objection.',
     summaryLabel: 'Quick summary',
     newsletterLabelMain: 'Are you subscribed to my newsletter?',
     btnMail: 'Submit',
@@ -329,10 +329,10 @@ const translations = {
     resetBtn: '🔄',
     botHelper: '',
     gdprRequired: 'You must accept the GDPR consent before submitting.',
-    sentConfirm: '✓ Information sent to Victor. He will get in touch with you shortly. The page will restart.',
+    sentConfirm: '✓ Information sent to Victor. He will contact you soon. have a good day.',
     resetConfirm: 'Are you sure you want to restart the chat? All data will be lost.',
     selectedPrefix: 'You selected:',
-    pleaseEnter: 'Please provide your'
+    pleaseEnter: 'Please enter your'
   }
 };
 
@@ -650,13 +650,13 @@ function updateUILanguage(){
   // Update newsletter main label
   const newsletterMainLabel = document.getElementById('newsletterMainLabel');
   if(newsletterMainLabel) {
-    newsletterMainLabel.innerHTML = `${t.newsletterLabelMain} <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">${t.newsletterLink}</a>`;
+    newsletterMainLabel.innerHTML = `${t.newsletterLabelMain.charAt(0).toUpperCase() + t.newsletterLabelMain.slice(1)} <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">${t.newsletterLink.toLowerCase()}</a>`;
   }
 
   // Update GDPR label element
   const gdprLabelElement = document.getElementById('gdprLabelElement');
   if(gdprLabelElement) {
-    gdprLabelElement.innerText = t.gdprLabel;
+    gdprLabelElement.innerText = t.gdprLabel.charAt(0).toUpperCase() + t.gdprLabel.slice(1);
   }
 
   // Update LinkedIn label and placeholders
@@ -669,14 +669,14 @@ function updateUILanguage(){
   // Update GDPR label text preserving the checkbox
   const gdprCheckbox = document.getElementById('gdpr');
   const gdprChecked = gdprCheckbox ? gdprCheckbox.checked : false;
-  document.querySelector('.consent label').innerHTML = `<input id="gdpr" type="checkbox" ${gdprChecked ? 'checked' : ''} /> ${t.gdprText}`;
+  document.querySelector('.consent label').innerHTML = `<input id="gdpr" type="checkbox" ${gdprChecked ? 'checked' : ''} /> ${t.gdprText.charAt(0).toUpperCase() + t.gdprText.slice(1)}`;
 
-  document.getElementById('btnMail').innerText = t.btnMail;
+  document.getElementById('btnMail').innerText = t.btnMail.charAt(0).toUpperCase() + t.btnMail.slice(1);
 
   // Update newsletter checkbox label
   const newsletterCheckbox = document.getElementById('newsletter');
   const newsletterChecked = newsletterCheckbox ? newsletterCheckbox.checked : false;
-  newsletterCheckbox.parentElement.innerHTML = `<input id="newsletter" type="checkbox" ${newsletterChecked ? 'checked' : ''} /> ${t.newsletterCheck}`;
+  newsletterCheckbox.parentElement.innerHTML = `<input id="newsletter" type="checkbox" ${newsletterChecked ? 'checked' : ''} /> ${t.newsletterCheck.charAt(0).toUpperCase() + t.newsletterCheck.slice(1)}`;
   updateSummary();
 }
 
