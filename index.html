@@ -353,7 +353,7 @@
     .chat .right{width:100%}
 
     .bot-window{
-      height:200px;
+      height:280px;
       padding:8px;
       border-radius:12px;
     }
@@ -493,10 +493,12 @@
     <div class="left">
       <div class="bot-window" id="chatWindow" role="log" aria-atomic="false"></div>
 
-      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-        <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." />
-        <button id="sendBtn">📤</button>
-        <button id="resetBtn" class="ghost" title="Reiniciar chat">🔄</button>
+      <div style="margin-top:10px;display:flex;gap:4px;align-items:center">
+        <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." style="flex:1;position:relative" />
+        <button id="sendBtn" style="padding:6px 10px;font-size:14px;min-width:auto">📤</button>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:6px">
+        <button id="resetBtn" class="ghost" title="Reiniciar chat" style="padding:4px 8px;font-size:12px">🔄</button>
       </div>
       <div class="muted" style="margin-top:8px;display:none">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
     </div>
