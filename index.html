@@ -1,487 +1,6 @@
 <!doctype html>
 <html lang="es">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Landing autónoma — Contacto</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-  :root{
-    --accent:#2563eb;
-    --accent-hover:#1d4ed8;
-    --bg:#f8fafc;
-    --card:#ffffff;
-    --muted:#64748b;
-    --border:#e2e8f0;
-    --text-primary:#0f172a;
-    --text-secondary:#475569;
-  }
-
-  *{box-sizing:border-box}
-
-  body{
-    margin:0;
-    font-family:'Inter',system-ui,-apple-system,sans-serif;
-    background:linear-gradient(135deg,#f8fafc 0%,#e0e7ff 100%);
-    color:var(--text-primary);
-    line-height:1.6;
-    font-size:15px;
-  }
-
-  .container{
-    max-width:1200px;
-    margin:0 auto;
-    padding:0;
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
-  }
-
-  header{
-    width:100%;
-    height:360px;
-    flex-shrink:0;
-    border-radius:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    overflow:hidden;
-    background:#001f3f;
-    box-shadow:none;
-    margin-bottom:0;
-  }
-
-  header .banner-text{
-    z-index:2;
-    text-align:center;
-    color:#03396b;
-    display:none;
-  }
-
-  header h1{margin:0;font-size:32px;font-weight:700}
-  header p{margin:8px 0 0;color:var(--muted);font-weight:400}
-
-  .banner-controls{
-    position:absolute;
-    right:16px;
-    bottom:16px;
-    z-index:3;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    align-items:flex-end;
-  }
-
-  .banner-controls select{
-    background:rgba(255,255,255,0.95);
-    backdrop-filter:blur(10px);
-    padding:8px 12px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.3);
-    cursor:pointer;
-    font-size:18px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.1);
-    transition:all 0.3s ease;
-  }
-
-  .banner-controls select:hover{
-    background:rgba(255,255,255,1);
-    box-shadow:0 6px 16px rgba(0,0,0,0.15);
-    transform:translateY(-2px);
-  }
-
-  .banner-preview{
-    position:absolute;
-    inset:0;
-    background-size:cover;
-    background-position:center 38%;
-
-    background-repeat:no-repeat;
-    opacity:1;
-    background-image:url('banner.jpeg');
-    image-rendering:-webkit-optimize-contrast;
-    image-rendering:crisp-edges;
-    filter:brightness(1.05) contrast(1.05);
-  }
-
-  .card{
-    background:var(--card);
-    border-radius:16px;
-    padding:28px;
-    box-shadow:0 8px 30px rgba(0,0,0,0.06);
-    border:1px solid var(--border);
-    margin:16px;
-  }
-
-  .chat{display:flex;gap:24px;flex:1;padding:24px;max-width:1100px;margin:0 auto;width:100%;justify-content:space-between}
-  .chat .left{flex:0 1 55%;background:var(--card);border-radius:16px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid var(--border);display:flex;flex-direction:column}
-  .chat .right{flex:0 1 35%;background:var(--card);border-radius:16px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,0.06);border:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
-
-  .bot-window{
-    height:350px;
-    border-radius:12px;
-    border:1px solid var(--border);
-    padding:16px;
-    overflow-y:auto;
-    background:#fafbfc;
-    box-shadow:inset 0 2px 8px rgba(0,0,0,0.03);
-    margin-bottom:16px;
-  }
-
-  .message{margin:12px 0;display:flex}
-  .msg.bot{justify-content:flex-start}
-  .msg.user{justify-content:flex-end}
-
-  .bubble{
-    max-width:80%;
-    padding:14px 18px;
-    border-radius:16px;
-    background:#f1f5f9;
-    color:var(--text-primary);
-    font-size:14.5px;
-    line-height:1.5;
-    box-shadow:0 2px 8px rgba(0,0,0,0.04);
-  }
-
-  .bubble.user{
-    background:linear-gradient(135deg,var(--accent),var(--accent-hover));
-    color:#fff;
-    box-shadow:0 4px 12px rgba(37,99,235,0.25);
-  }
-
-  .controls{display:flex;gap:10px;margin-top:16px}
-
-  input[type="text"],input[type="email"],input[type="tel"],select,textarea{
-    width:100%;
-    padding:12px 16px;
-    border-radius:12px;
-    border:1.5px solid var(--border);
-    font-family:inherit;
-    font-size:14px;
-    transition:all 0.2s ease;
-    background:#fff;
-  }
-
-  input:focus,select:focus,textarea:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
-  }
-
-  .small-row{display:flex;gap:10px}
-  .small-row input{flex:1}
-
-  .options{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:10px;
-    margin-top:12px;
-  }
-
-  .option-btn{
-    padding:12px 16px;
-    border-radius:12px;
-    border:1.5px solid var(--border);
-    background:#fff;
-    color:var(--text-primary);
-    cursor:pointer;
-    font-size:14px;
-    font-weight:500;
-    transition:all 0.2s ease;
-    text-align:center;
-  }
-
-  .option-btn:hover{
-    border-color:var(--accent);
-    background:#f0f6ff;
-    transform:translateY(-1px);
-  }
-
-  .option-btn.active{
-    border-color:var(--accent);
-    background:linear-gradient(135deg,#eff6ff,#dbeafe);
-    color:var(--accent);
-    box-shadow:0 4px 12px rgba(37,99,235,0.15);
-    font-weight:600;
-  }
-
-  .footer-actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:20px;
-  }
-
-  button{
-    background:linear-gradient(135deg,var(--accent),var(--accent-hover));
-    color:#fff;
-    padding:12px 24px;
-    border-radius:12px;
-    border:0;
-    cursor:pointer;
-    font-weight:600;
-    font-size:15px;
-    transition:all 0.2s ease;
-    box-shadow:0 4px 12px rgba(37,99,235,0.2);
-  }
-
-  button:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 16px rgba(37,99,235,0.3);
-  }
-
-  button.ghost{
-    background:#fff;
-    color:var(--accent);
-    border:1.5px solid var(--border);
-    box-shadow:0 2px 8px rgba(0,0,0,0.04);
-  }
-
-  button.ghost:hover{
-    background:#f8fafc;
-    border-color:var(--accent);
-  }
-
-  .muted{
-    color:var(--muted);
-    font-size:13px;
-    font-weight:500;
-  }
-
-  .consent{
-    font-size:13px;
-    margin-top:12px;
-    line-height:1.6;
-    color:var(--text-secondary);
-  }
-
-  .consent input[type="checkbox"]{
-    margin-right:8px;
-    width:18px;
-    height:18px;
-    cursor:pointer;
-  }
-
-  .links-row{display:flex;gap:10px;margin-top:10px}
-  .links-row input{flex:1}
-
-  h3{
-    margin:0 0 20px 0;
-    font-size:20px;
-    font-weight:700;
-    color:var(--text-primary);
-  }
-
-  a{
-    color:var(--accent);
-    text-decoration:none;
-    font-weight:600;
-    transition:color 0.2s ease;
-  }
-
-  a:hover{
-    color:var(--accent-hover);
-    text-decoration:underline;
-  }
-
-  .editable{
-    background:#fefce8;
-    padding:4px 8px;
-    border-radius:6px;
-    cursor:text;
-    border:1px dashed #facc15;
-    transition:all 0.2s ease;
-  }
-
-  .editable:hover{background:#fef9c3}
-  .editable:focus{
-    outline:none;
-    border-color:var(--accent);
-    background:#fff;
-    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
-  }
-
-  label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:500;
-    color:var(--text-secondary);
-  }
-
-  /* Responsive Design - Mobile First */
-  @media(max-width:880px){
-    body{height:auto;overflow:auto}
-
-    .container{height:auto;flex-direction:column}
-
-    header{
-      width:100%;
-      height:auto;
-      min-height:280px;
-      border-radius:12px;
-      margin-bottom:16px;
-    }
-
-    .chat{flex-direction:column}
-    .chat .left{padding:16px}
-    .chat .right{width:100%;padding:16px;border-left:none;border-top:1px solid var(--border)}
-  }
-
-  @media(max-width:640px){
-    body{font-size:12px}
-    .container{padding:8px 0;width:100vw;max-width:100vw;box-sizing:border-box}
-    header{
-      width:100vw;
-      aspect-ratio:49/18;
-      height:auto;
-      min-height:0;
-      max-height:none;
-      border-radius:0;
-      margin-bottom:8px;
-      overflow:hidden;
-      display:block;
-      background:#001f3f;
-      padding:0;
-    }
-    .banner-preview{
-      width:100vw;
-      height:100%;
-      background-size:contain;
-      background-repeat:no-repeat;
-      background-position:center center;
-      image-rendering:auto;
-      filter:brightness(1.0) contrast(1.02);
-    }
-    header h1{font-size:24px}
-    .banner-controls{right:12px;bottom:12px;display:none;}
-    .banner-controls select{padding:2px 4px;font-size:10px;border-radius:4px;opacity:0.6;}
-    .card{padding:8px;border-radius:12px;}
-    .chat{flex-direction:column;gap:16px;}
-    .chat .left, .chat .right{width:100%;max-width:100vw}
-    .bot-window{height:280px;padding:8px;border-radius:12px;}
-    .bubble{max-width:85%;padding:10px 14px;font-size:14px;}
-    .options{grid-template-columns:1fr;gap:8px;}
-    .option-btn{padding:10px 14px;font-size:13px;}
-    input[type="text"],input[type="email"],input[type="tel"],select,textarea{padding:6px 10px;font-size:12px;}
-    button{padding:10px 18px;font-size:14px;width:100%;}
-    button.ghost{width:100%}
-    .footer-actions{flex-direction:column;gap:8px;}
-    h3{font-size:18px}
-    .links-row{flex-direction:column;gap:8px;}
-    #sendBtn{display:none !important}
-    #userInput{width:100% !important}
-    #mobileLanguageSelector{display:block !important}
-    #resetContainer{margin-top:0 !important;padding:0 !important;min-height:auto !important;}
-    #resetBtn{padding:1px 3px !important;font-size:8px !important;min-width:auto !important;line-height:1 !important;border:none !important;background:transparent !important;box-shadow:none !important;}
-  }
-    .container{padding:24px 16px}
-
-    header{
-      min-height:260px;
-      border-radius:16px;
-    }
-
-    header h1{font-size:28px}
-
-    .chat{
-      flex-direction:column;
-      gap:20px;
-    }
-
-    .chat .right{width:100%}
-
-    .bot-window{height:420px}
-
-    .options{
-      grid-template-columns:repeat(2,1fr);
-    }
-
-
-  /* Desktop Large */
-  @media(min-width:1200px){
-    .container{
-      max-width:1400px;
-      margin:0 auto;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      height:100vh;
-    }
-
-    header{
-      min-height:35%;
-      border-radius:16px;
-      margin-bottom:16px;
-      flex-shrink:0;
-    }
-
-    .card.chat{
-      flex:1;
-      display:flex;
-      flex-direction:row;
-      gap:16px;
-      padding:0;
-      border:none;
-      box-shadow:none;
-      background:transparent;
-    }
-
-    .chat .left{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .chat .right{
-      width:50%;
-      flex-shrink:0;
-    }
-
-    .card{
-      border-radius:12px;
-      padding:20px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .bot-window{
-      height:100%;
-      min-height:200px;
-    }
-
-    /* Mostrar foto completa en desktop grande */
-    .banner-preview{
-      background-size:cover;
-      background-position:center 35%;
-    }
-  }
-
-  /* Touch Devices - Larger tap targets */
-  @media(pointer:coarse){
-    button,
-    .option-btn,
-    input[type="checkbox"]{
-      min-height:44px;
-    }
-
-    .banner-controls select{
-      min-height:44px;
-      padding:10px 14px;
-    }
-  }
-
-  /* Print Styles */
-  @media print{
-    body{background:#fff}
-    header{box-shadow:none}
-    .card{box-shadow:none;border:1px solid #ddd}
-    .banner-controls{display:none}
-    button{display:none}
-  }
-</style>
-</head>
-<body>
+  <!-- ...existing code... -->
 <div style="display:none" id="mobileLanguageSelector">
   <div style="text-align:right;padding:8px 12px">
     <select id="langSelectorMobile" style="padding:4px 8px;border-radius:4px;border:1px solid #e6e9ef;background:#fff;cursor:pointer;font-size:14px">
@@ -491,60 +10,58 @@
   </div>
 </div>
 
-<div class="container">
-  <header id="banner">
-    <div class="banner-preview" id="bannerPreview"></div>
-    <div class="banner-text">
-      <h1>¿En qué puedo ayudarte?</h1>
-      <p>Completa el chat y cuéntanos tu proyecto</p>
-    </div>
-    <div class="banner-controls">
-      <select id="langSelector" style="padding:4px 6px;border-radius:4px;border:1px solid #e6e9ef;background:#fff;cursor:pointer;font-size:16px;margin-top:6px">
-        <option value="es">🇪🇸</option>
-        <option value="en">🇬🇧</option>
-      </select>
-    </div>
-  </header>
+  <div class="container">
+    <header id="banner" style="width:1136px; height:360px; border-radius:10px; background:#001f3f; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; margin:0 auto;">
+      <div class="banner-preview" id="bannerPreview" style="width:1136px; height:360px; background-size:contain; background-position:center; background-repeat:no-repeat; opacity:1; background-image:url('banner.jpeg'); position:relative;"></div>
+      <!-- Frase eliminada, solo imagen visible en el banner -->
+      <div class="banner-controls" style="position:absolute; right:8px; bottom:8px; z-index:3; display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+        <select id="langSelector" style="background:#fff;padding:4px 8px;border-radius:4px;border:1px solid #e6e9ef;cursor:pointer;font-size:14px;opacity:0.7;">
+          <option value="es">🇪🇸</option>
+          <option value="en">🇬🇧</option>
+        </select>
+      </div>
+    </header>
 
   <div class="card chat" aria-live="polite" style="display:flex;flex-direction:row;gap:24px;align-items:stretch">
-    <div class="left" style="flex:1;display:flex;flex-direction:column;justify-content:stretch">
-      <div class="bot-window" id="chatWindow" role="log" aria-atomic="false"></div>
-      <div style="margin-top:10px;display:flex;gap:4px;align-items:center">
-        <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." style="flex:1;padding:12px 14px;font-size:14px" />
-        <button id="sendBtn" style="padding:10px 14px;font-size:16px;min-width:auto;height:auto">📤</button>
+    <div class="lower-section" style="display:flex;flex-direction:row;justify-content:center;align-items:stretch;width:1136px;margin:0 auto;gap:32px;">
+      <div class="boton-envio" style="width:568px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f8fafc;border-radius:16px;box-shadow:0 2px 12px #001f3f14;padding:32px 24px;">
+        <div class="dialogo-chat" style="width:100%;height:100%;min-height:540px;max-height:540px;overflow-y:auto;background:#fff;border-radius:10px;box-shadow:0 1px 6px #001f3f18;padding:24px 18px 12px 18px;margin-bottom:0;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;">
+          <div class="bot-window" id="chatWindow" role="log" aria-atomic="false" style="width:100%;height:100%;min-height:420px;max-height:420px;overflow-y:hidden;"></div>
+          <div class="entrada-chat" style="width:100%;display:flex;align-items:end;gap:6px;margin-top:24px;">
+            <input id="userInput" type="text" placeholder="Escribe tu respuesta aquí..." style="flex:1;padding:12px 14px;font-size:15px;border-radius:7px;border:1px solid #d1d5db;" />
+            <button id="sendBtn" style="padding:6px 8px;font-size:15px;min-width:32px;min-height:32px;max-width:32px;max-height:32px;background:#001f3f;color:#fff;border:none;border-radius:50%;box-shadow:0 1px 4px #001f3f22;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;">📤</button>
+          </div>
+          <div id="resetContainer" style="width:100%;display:flex;justify-content:flex-end;margin-top:2px;">
+            <button id="resetBtn" class="ghost" title="Reiniciar chat" style="padding:2px 4px;font-size:12px;min-width:22px;min-height:22px;max-width:22px;max-height:22px;display:flex;align-items:center;justify-content:center;">🔄</button>
+          </div>
+        </div>
       </div>
-      <div id="resetContainer" style="display:flex;justify-content:flex-end;margin-top:4px">
-        <button id="resetBtn" class="ghost" title="Reiniciar chat" style="padding:2px 6px;font-size:10px">🔄</button>
-      </div>
-      <div class="muted" style="margin-top:8px;display:none">El bot te guiará paso a paso. Puedes editar los datos directamente en el resumen o reiniciar con 🔄</div>
-    </div>
-    <div class="right" style="flex:1;display:flex;flex-direction:column;justify-content:stretch">
-      <div class="card" style="padding:12px;display:flex;flex-direction:column;justify-content:space-between;height:100%">
-        <h3 id="summaryTitle">Resumen rápido</h3>
-        <div id="summary" class="muted" style="display:none !important">Aún no hay datos.</div>
-        <div style="margin-top:12px">
-          <label class="muted" id="linkedinLabel">LinkedIn</label>
-          <div class="links-row">
-            <input id="linkedinPersonal" type="text" placeholder="LinkedIn personal" />
-            <input id="linkedinEmpresa" type="text" placeholder="LinkedIn de la empresa" />
+      <div class="resumen-corto" style="width:568px;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;border-radius:16px;box-shadow:0 2px 12px #001f3f14;padding:32px 24px;">
+        <h3 id="summaryTitle" style="margin-bottom:16px;font-size:1.5rem;color:#001f3f;font-weight:700;letter-spacing:0.5px;">Resumen rápido</h3>
+        <div id="summary" class="muted" style="width:100%;min-height:48px;font-size:1.1rem;color:#333;background:#f3f6fa;border-radius:8px;padding:16px 12px;margin-bottom:18px;box-shadow:0 1px 4px #001f3f0a;">Aún no hay datos.</div>
+        <div style="width:100%;margin-top:12px;">
+          <label class="muted" id="linkedinLabel" style="font-size:0.95rem;">LinkedIn</label>
+          <div class="links-row" style="display:flex;gap:8px;margin-top:6px;">
+            <input id="linkedinPersonal" type="text" placeholder="LinkedIn personal" style="flex:1;padding:8px 10px;border-radius:6px;border:1px solid #d1d5db;" />
+            <input id="linkedinEmpresa" type="text" placeholder="LinkedIn de la empresa" style="flex:1;padding:8px 10px;border-radius:6px;border:1px solid #d1d5db;" />
           </div>
         </div>
-        <div style="margin-top:12px">
-          <label class="muted" id="newsletterMainLabel">¿Ya estás suscrito a mi Newsletter? <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener">Suscríbete aquí</a></label>
-          <div style="margin-top:6px">
-            <label><input id="newsletter" type="checkbox" /> Sí, estoy suscrito</label>
+        <div style="width:100%;margin-top:12px;">
+          <label class="muted" id="newsletterMainLabel" style="font-size:0.95rem;">¿Ya estás suscrito a mi Newsletter? <a href="https://www.barcelona-metropolitan.com/magazine/newsletter" target="_blank" rel="noopener" style="color:#0074d9;text-decoration:underline;">Suscríbete aquí</a></label>
+          <div style="margin-top:6px;">
+            <label style="font-size:0.95rem;"><input id="newsletter" type="checkbox" /> Sí, estoy suscrito</label>
           </div>
         </div>
-        <div style="margin-top:12px">
-          <label class="muted" id="gdprLabelElement">Consentimiento (obligatorio)</label>
-          <div class="consent">
-            <label><input id="gdpr" type="checkbox" /> Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.</label>
+        <div style="width:100%;margin-top:12px;">
+          <label class="muted" id="gdprLabelElement" style="font-size:0.95rem;">Consentimiento (obligatorio)</label>
+          <div class="consent" style="margin-top:4px;">
+            <label style="font-size:0.95rem;"><input id="gdpr" type="checkbox" /> Acepto que mis datos sean tratados por la entidad responsable de esta landing conforme al Reglamento (UE) 2016/679 y la legislación aplicable. Entiendo que puedo ejercer mis derechos de acceso, rectificación, supresión y oposición.</label>
           </div>
         </div>
-        <div class="footer-actions">
+        <div class="footer-actions" style="width:100%;display:flex;gap:8px;margin-top:18px;">
           <button id="btnCopy" class="ghost" style="display:none">Copiar JSON</button>
           <button id="btnDownload" class="ghost" style="display:none">Descargar JSON</button>
-          <button id="btnMail" class="ghost">Enviar</button>
+          <button id="btnMail" class="ghost" style="background:#001f3f;color:#fff;border-radius:8px;padding:10px 18px;font-size:1rem;box-shadow:0 1px 4px #001f3f22;">Enviar</button>
         </div>
       </div>
     </div>
@@ -554,6 +71,45 @@
 </div>
 
 <script>
+// --- Estilos de burbujas tipo bot ---
+const style = document.createElement('style');
+style.innerHTML = `
+  .msg.bot {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .msg.bot .bubble {
+    background: #0074d9;
+    color: #fff;
+    border-radius: 16px 16px 16px 4px;
+    padding: 12px 18px;
+    margin: 4px 0 6px 0;
+    font-size: 1.08rem;
+    box-shadow: 0 2px 8px #001f3f18;
+    max-width: 90%;
+    display: inline-block;
+    text-align: left;
+    align-self: flex-start;
+  }
+  .msg.user {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .msg.user .bubble.user {
+    background: #f3f6fa;
+    color: #222;
+    border-radius: 16px 16px 4px 16px;
+    padding: 12px 18px;
+    margin: 6px 0;
+    font-size: 1.08rem;
+    box-shadow: 0 2px 8px #001f3f10;
+    max-width: 90%;
+    display: inline-block;
+    text-align: right;
+    align-self: flex-end;
+  }
+`;
+document.head.appendChild(style);
 /* --- Sistema de idiomas --- */
 let currentLang = 'es';
 
